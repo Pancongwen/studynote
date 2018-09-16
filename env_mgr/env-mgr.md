@@ -63,9 +63,161 @@ ps： 更多场景欢迎补充。
     chmod +x Anaconda3-5.2.0-Linux-x86_64.sh
     ./Anaconda3-5.2.0-Linux-x86_64.sh
     ```
+    下载下来的安装文件是没有可执行权限的
     
-3. 根据安装脚本的提示进行配置。
+3. 根据安装脚本的提示进行配置。  
+    * 首先，按 `Enter` 继续。
+    * 下面会展示 `Licence`、`Notice` 之类的，一直按 `Enter` 直到出现：
+    ```bash
+    Do you accept the license terms?[yes|no]
+    [no] >>>
+    ```
+    * 输入 `yes` 表示同意。（就类似安装软件时，选择我同意此协议才能继续安装。）
+    * 下面要选择你做要安装的路径：
+    ```bash
+    Anaconda3 will now be installed into this location:
+    /home/pancongwen/anaconda3
 
-ps: 官方安装文档看[这里](https://docs.anaconda.com/anaconda/install/linux/)
+    - Press ENTER to confirm the location
+    - Press CTRL-C to abort the installation
+    - Or specify a different location below
 
-## 
+    [/home/USER/anaconda3] >>>
+    ```
+    此处会默认安装在 `home` 目录当前用户的文件夹下，无特殊需求直接 `Enter` 即可。**记住这个路径，之后还会提到**。
+
+4. 下面就会正式进入安装环节，你可以看到他安装的各种 `package`。
+    ```bash
+    installing: python-3.6.5-hc3d631a_2 ...
+    Python 3.6.5 :: Anaconda, Inc.
+    installing: blas-1.0-mkl ...
+    installing: ca-certificates-2018.03.07-0 ...
+    installing: conda-env-2.6.0-h36134e3_1 ...
+    installing: intel-openmp-2018.0.0-8 ...
+    installing: libgcc-ng-7.2.0-hdf63c60_3 ...
+    installing: libgfortran-ng-7.2.0-hdf63c60_3 ...
+    installing: libstdcxx-ng-7.2.0-hdf63c60_3 ...
+    installing: bzip2-1.0.6-h14c3975_5 ...
+    installing: expat-2.2.5-he0dffb1_0 ...
+    installing: gmp-6.1.2-h6c8ec71_1 ...
+    installing: graphite2-1.3.11-h16798f4_2 ...
+    installing: icu-58.2-h9c2bf20_1 ...
+    ...
+    ```
+
+5. 下面将 `Anaconda` 的路径加入 `.bashrc`。
+    ```bash
+    Do you wish the installer to prepend the Anaconda3 install location
+    to PATH in your /home/pancongwen/.bashrc ? [yes|no]
+    [no] >>>
+    ```
+    输入 `yes`，这个同意后，才能在环境下使用其安装的 `package`。
+    官方 `FAQ` [链接](https://docs.anaconda.com/anaconda/faq/#distribution-faq-linux-path)：
+    ```txt
+    When installing Anaconda, we recommend that you do add Anaconda to the PATH if you answer “No” during installation to the question “Do you wish the installer to prepend the Anaconda<2 or 3>install location to PATH in your /home/<user>/.bashrc?”. Conda will not work until you add the PATH manually.
+
+    To add the PATH manually, open a text editor and open the file .bashrc or .bash_profile from your home directory. Add the line export PATH="/<path to anaconda>/bin:$PATH".
+
+    NOTE: Replace <path-to-anaconda> with the actual path of your installed anaconda file.
+
+    Save the file. If you have any terminal windows open, close them all then open a new one. You may need to restart your computer for the PATH change to take effect.
+    ```
+
+6. 下面会推荐你安装 `Microsoft VSCode`（微软开发的一款开源IDE），看个人情况。
+7. 安装完成。
+
+ps: 更多信息请查看[官方安装文档](https://docs.anaconda.com/anaconda/install/linux/)。
+
+### 验证
+经过上面的安装，我们来验证一下安装是否成功。
+
+0. 在刚刚安装时的 `Terminal` 输入以下命令：
+    ```bash
+    $ conda -V
+    ```
+    会得到 `conda: command not found` 的提示。这是因为添加到 `.bashrc` 中的设置不是即时生效的，会在之后打开的 `Terminal` 中生效。
+    
+1. 我们打开另一个 `Terminal` （快捷键 `Ctrl+Alt+t`），输入相同的命令：
+    ```bash
+    $ conda -V
+    conda 4.5.4
+    ```
+    确认安装成功。
+
+2. 你也可以查看 `conda` 命令的帮助：
+    ```bash
+    $ conda -h
+    $ conda --help
+    ```
+
+## 如何使用 `conda` 来管理环境？
+
+### 举例场景
+举一个场景的例子帮助大家理解管理的步骤：  
+- 一个叫做 `utc_time` 的 `Python` 项目
+- 需要指定 `Python` 的版本为 `2.7`
+- 需要安装对应版本的 `arrow` 库
+
+### 准备工作
+查看一些参数与之后做对比
+- 当前 `Python` 版本：
+    ```bash
+    $ python -V
+    ```
+    如果之前电脑上没有 `python`，那么在安装过 `Anaconda` 后，会自动帮你安装其对应的版本。比如本文选择的是 `3.6.5`，那么输出即为 `3.6.5`。
+
+- 当前 `python` 命令的路径：
+    ```bash
+    /home/pancongwen/anaconda3/bin/python
+    ```
+    可以看出现在 `python` 命令的可执行文件在 `/home/pancongwen/anaconda3/bin/python` 里面。
+
+    > 补充说明：  
+    > `ubuntu` 里面的命令的可执行文件都是放在了全局变量 `PATH` 的路径里面：
+    > ```bash
+    > $ echo $PATH
+    > ```
+    > 或者
+    > ```bash
+    > $ $PATH
+    > ```
+    > 输出类似这样：
+    > ```
+    > bash: /home/pancongwen/anaconda3/bin:/home/pancongwen/bin:/home/pancongwen/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+    > ```
+    > 每个路径以 `:`隔开。其中 `/home/pancongwen/anaconda3/bin` 就是我们刚刚下载安装的 `Anaconda` 的路径。
+
+- 查看 `python` 库 `arrow` 是否存在。
+    ```bash
+    $ pip list
+    ```
+    查看有没有 `arrow` 这个 `package`。
+
+### 创建一个项目
+
+1. 新建文件夹 `utc_time`
+    ```bash
+    $ mkdir utc_time
+    ```
+
+2. 新建 `python` 脚本
+    选择一款编辑器新建一个 `utc_time.py` 的文件，此处以 `vim` 为例。
+    ```bash
+    $ vim utc_time.py 
+    ```
+    将下方代码拷贝到 `utc_time.py` 中。
+    ```python2.7
+    #!/bin/usr/env python2.7
+
+    import arrow
+
+    utc = arrow.utcnow()
+
+    print utc
+    ```
+    此脚本的作用就是输出当时的 `UTC` 时间。
+
+3. 执行一下脚本
+    ```bash
+    $ 
+    ```
