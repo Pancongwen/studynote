@@ -172,7 +172,8 @@ ps: 更多信息请查看[官方安装文档](https://docs.anaconda.com/anaconda
     ```
     可以看出现在 `python` 命令的可执行文件在 `/home/pancongwen/anaconda3/bin/python` 里面。
 
-    > 补充说明：  
+    > 补充知识 ： 关于 `ubuntu` 命令是如何全局使用的
+    > 
     > `ubuntu` 里面的命令的可执行文件都是放在了全局变量 `PATH` 的路径里面：
     > ```bash
     > $ echo $PATH
@@ -219,5 +220,187 @@ ps: 更多信息请查看[官方安装文档](https://docs.anaconda.com/anaconda
 
 3. 执行一下脚本
     ```bash
-    $ 
+    $ python -m utc_time
+    ```
+    因为当前系统 `python` 版本为 `3.6.5`，则报错：
+    ```bash
+    SyntaxError: Missing parentheses in call to 'print'. Did you mean print(utc)?
+    ```
+    > 补充知识： `python2` 和 `python3` 关于 `print` 使用上的差别  
+    > `python2` 打印对象：
+    > ```python2
+    > a = "hello"
+    > print a 
+    > ```
+    > `python3` 打印对象：
+    > ```python3
+    > a = "hello"
+    > print(a)
+    > ```
+
+### 使用 `conda` 管理环境
+1. 新建环境 `py27`
+    ```bash
+    $ conda create --name py27 python=2.7
+    ```
+    创建一个 `conda` 环境，取名叫 `py27`，指定其语言为 `python` 且版本为 `2.7`。  
+    输出见下方：
+    ```bash
+    Solving environment: done
+
+    ## Package Plan ##
+
+      environment location: /home/pancongwen/anaconda3/envs/py27
+
+      added / updated specs: 
+        - python=2.7
+
+
+    The following packages will be downloaded:
+
+        package                    |            build
+        ---------------------------|-----------------
+        libstdcxx-ng-8.2.0         |       hdf63c60_1         2.9 MB
+        python-2.7.15              |       h1571d57_0        12.1 MB
+        openssl-1.0.2p             |       h14c3975_0         3.5 MB
+        readline-7.0               |       h7b6447c_5         392 KB
+        certifi-2018.8.24          |           py27_1         139 KB
+        setuptools-40.2.0          |           py27_0         585 KB
+        tk-8.6.8                   |       hbc83047_0         3.1 MB
+        wheel-0.31.1               |           py27_0          62 KB
+        pip-10.0.1                 |           py27_0         1.7 MB
+        sqlite-3.24.0              |       h84994c4_0         1.8 MB
+        libgcc-ng-8.2.0            |       hdf63c60_1         7.6 MB
+        ------------------------------------------------------------
+                                               Total:        33.8 MB
+
+    The following NEW packages will be INSTALLED:
+
+        ca-certificates: 2018.03.07-0           
+        certifi:         2018.8.24-py27_1       
+        libedit:         3.1.20170329-h6b74fdf_2
+        libffi:          3.2.1-hd88cf55_4       
+        libgcc-ng:       8.2.0-hdf63c60_1       
+        libstdcxx-ng:    8.2.0-hdf63c60_1       
+        ncurses:         6.1-hf484d3e_0         
+        openssl:         1.0.2p-h14c3975_0      
+        pip:             10.0.1-py27_0          
+        python:          2.7.15-h1571d57_0      
+        readline:        7.0-h7b6447c_5         
+        setuptools:      40.2.0-py27_0          
+        sqlite:          3.24.0-h84994c4_0      
+        tk:              8.6.8-hbc83047_0       
+        wheel:           0.31.1-py27_0          
+        zlib:            1.2.11-ha838bed_2 
+
+    Proceed ([y]/n)? 
+    ```
+    确认后输入 `y`：
+    ```bash
+    Downloading and Extracting Packages
+    libstdcxx-ng-8.2.0   | 2.9 MB    |  #############| 100% 
+    python-2.7.15        | 12.1 MB   |  #############| 100% 
+    openssl-1.0.2p       | 3.5 MB    |  #############| 100% 
+    readline-7.0         | 392 KB    |  #############| 100% 
+    certifi-2018.8.24    | 139 KB    |  #############| 100% 
+    setuptools-40.2.0    | 585 KB    |  #############| 100% 
+    tk-8.6.8             | 3.1 MB    |  #############| 100% 
+    wheel-0.31.1         | 62 KB     |  #############| 100% 
+    pip-10.0.1           | 1.7 MB    |  #############| 100% 
+    sqlite-3.24.0        | 1.8 MB    |  #############| 100% 
+    libgcc-ng-8.2.0      | 7.6 MB    |  #############| 100% 
+    Preparing transaction: done
+    Verifying transaction: done
+    Executing transaction: done
+    #
+    # To activate this environment, use:
+    # > source activate py27
+    #
+    # To deactivate an active environment, use:
+    # > source deactivate
+    #
+    ```
+
+2. 使用环境 `py27`
+    ```bash
+    $ source activate py27
+    (py27) $ 
+    ```
+    激活 `py27` 环境之后，你可以在 `$` 前看到环境名称。
+
+3. 确认当前 `python` 版本
+    ```bash
+    $ python --version
+    Python 2.7.15 :: Anaconda, Inc.
+    ```
+
+4. 再次执行脚本
+    ```bash
+    $ python -m utc_time
+    ```
+    由于没有第三方库 `arrow`，会出现 `ImportError`：
+    ```bash
+    ImportError: No module named arrow
+    ```
+
+5. 在环境 `py27` 里面安装其他包  
+    ```bash
+    $ conda install arrow
+    ```
+    此处我们以 `python` 第三方库 `arrow` 的安装为例。
+    ```bash
+    Solving environment: done
+
+    ## Package Plan ##
+
+      environment location: /home/pancongwen/anaconda3/envs/py27
+
+      added / updated specs: 
+        - arrow
+
+
+    The following packages will be downloaded:
+
+        package                    |            build
+        ---------------------------|-----------------
+        arrow-0.12.1               |           py27_1          72 KB
+        backports-1.0              |           py27_1           3 KB
+        backports.functools_lru_cache-1.5|           py27_1           9 KB
+        six-1.11.0                 |           py27_1          21 KB
+        python-dateutil-2.7.3      |           py27_0         258 KB
+        ------------------------------------------------------------
+                                               Total:         364 KB
+
+    The following NEW packages will be INSTALLED:
+
+        arrow:                         0.12.1-py27_1
+        backports:                     1.0-py27_1   
+        backports.functools_lru_cache: 1.5-py27_1   
+        python-dateutil:               2.7.3-py27_0 
+        six:                           1.11.0-py27_1
+
+    Proceed ([y]/n)? y
+
+
+    Downloading and Extracting Packages
+    arrow-0.12.1         | 72 KB     |  ############# | 100% 
+    backports-1.0        | 3 KB      |  ############# | 100% 
+    backports.functools_ | 9 KB      |  ############# | 100% 
+    six-1.11.0           | 21 KB     |  ############# | 100% 
+    python-dateutil-2.7. | 258 KB    |  ############# | 100% 
+    Preparing transaction: done
+    Verifying transaction: done
+    Executing transaction: done
+    ```
+
+6. 再次执行脚本
+    ```bash
+    $ python -m utc_time
+    2018-09-24T11:39:56.710756+00:00
+    ```
+    成功！
+
+7. 退出环境
+    ```bash
+    $ source deactivate
     ```
