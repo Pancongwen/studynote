@@ -2,7 +2,7 @@
 
 This is a notes of my IT study.
 
-To see the book on web, go to the [github pages]().
+To see the book on web, go to the [github pages](https://pancongwen.github.io/studynote/).
 
 ## For developer
 All notes are writed by markdown in `notes/`.
